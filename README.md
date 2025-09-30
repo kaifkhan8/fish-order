@@ -22,7 +22,9 @@ A comprehensive web application for Rehman Fish Shop to manage customer orders, 
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Node.js with Express.js
-- **Storage**: File-based JSON storage (no database required)
+- **Storage**: 
+  - File-based JSON storage for local development
+  - In-memory storage for Vercel deployment
 - **Barcode/QR**: QRCode.js library
 
 ## Installation
@@ -115,7 +117,13 @@ rehman-fish-app/
 
 ## Vercel Deployment
 
-This application is configured for deployment on Vercel with serverless functions for API endpoints and static file serving for the frontend.
+This application is configured for deployment on Vercel with:
+- Serverless functions for API endpoints
+- Static file serving for the frontend
+- In-memory storage for Vercel's read-only environment
+- File-based storage for local development
+
+**Note**: Data persistence on Vercel is limited as serverless functions are ephemeral. For production use with data persistence, consider migrating to a database solution.
 
 ## Author
 
