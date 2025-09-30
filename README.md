@@ -77,9 +77,19 @@ rehman-fish-app/
 │   ├── orders.json
 │   ├── feedback.json
 │   └── barcodes.json
+├── api/
+│   ├── orders/
+│   │   ├── index.js
+│   │   └── [id].js
+│   ├── feedback/
+│   │   ├── index.js
+│   │   └── [id].js
+│   └── barcode/
+│       └── index.js
 ├── fileStorage.js
 ├── server.js
 ├── package.json
+├── vercel.json
 ├── README.md
 ├── start-app.bat
 └── dev-start.bat
@@ -102,6 +112,10 @@ rehman-fish-app/
 - `GET /api/barcode` - Get all barcodes
 - `POST /api/barcode/generate-qrcode` - Generate a new QR code
 - `POST /api/barcode/scan` - Scan a QR code
+
+## Vercel Deployment
+
+This application is configured for deployment on Vercel with serverless functions for API endpoints and static file serving for the frontend.
 
 ## Author
 
