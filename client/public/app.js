@@ -1,6 +1,6 @@
 // Main application file for Rehman Fish Shop
 
-// API base URL
+// API base URL - for Vercel deployment, we'll use relative paths
 const API_BASE = '/api';
 
 // DOM Elements
@@ -216,7 +216,7 @@ function displayOrders(orders) {
                         <td>₹${order.pricePerKg.toFixed(2)}</td>
                         <td>₹${order.totalPrice.toFixed(2)}</td>
                         <td>
-                            <select onchange="updateOrderStatus('${order._id}', this.value)" 
+                            <select onchange="updateOrderStatus('${order.id}', this.value)" 
                                     value="${order.status}">
                                 <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
                                 <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
