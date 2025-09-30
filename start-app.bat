@@ -1,0 +1,16 @@
+@echo off
+echo Starting Rehman Fish Shop Application...
+
+echo Installing dependencies...
+npm install
+
+echo Starting MongoDB (make sure MongoDB is installed and in your PATH)...
+start mongod
+
+echo Starting the application server...
+npm start
+
+echo.
+echo Application should now be running at http://localhost:3000
+echo Press any key to close this window...
+pause >nul

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rehman Fish Shop - Barcode Scanner</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Rehman Fish Shop</h1>
+        <p>Fresh Fish & Seafood Delivered Daily</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="order.html">Place Order</a></li>
+            <li><a href="view-orders.html">View Orders</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="barcode.html" class="active">Barcode Scanner</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <main>
+            <section id="generate-barcode" class="section">
+                <h2>Generate QR Code for Fish Item</h2>
+                <form id="barcodeForm">
+                    <div class="form-group">
+                        <label for="fishType">Fish Type *</label>
+                        <input type="text" id="fishType" name="fishType" required placeholder="e.g., Rohu, Hilsa">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pricePerKg">Price per kg (₹) *</label>
+                        <input type="number" id="pricePerKg" name="pricePerKg" step="0.01" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description (Optional)</label>
+                        <textarea id="description" name="description" rows="3" placeholder="Additional details about the fish"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-block">Generate QR Code</button>
+                </form>
+                
+                <div id="qrCodeContainer" class="qr-code-container">
+                    <!-- QR code will be displayed here -->
+                </div>
+            </section>
+            
+            <section id="scan-barcode" class="section">
+                <h2>Scan QR Code</h2>
+                <div id="scannerContainer" class="scanner-container">
+                    <p>Click "Start Scanner" to begin scanning QR codes</p>
+                </div>
+                
+                <div id="barcodeList">
+                    <h3>Existing Barcodes</h3>
+                    <p>Loading barcodes...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

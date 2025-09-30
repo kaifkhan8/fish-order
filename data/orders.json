@@ -1,0 +1,26 @@
+[
+  {
+    "id": "mg6az7596py8qfkywet",
+    "customerName": "kaif",
+    "customerPhone": "8269887132",
+    "fishType": "Rohu",
+    "quantity": 24.9,
+    "pricePerKg": 55,
+    "totalPrice": 1369.5,
+    "status": "pending",
+    "barcode": null,
+    "orderDate": "2025-09-30T08:36:02.925Z"
+  },
+  {
+    "id": "mg6b1tn8obkms5joatg",
+    "customerName": "rajesh",
+    "customerPhone": "78965874",
+    "fishType": "Prawn",
+    "quantity": 5819.9,
+    "pricePerKg": 8652.99,
+    "totalPrice": 50359536.500999995,
+    "status": "pending",
+    "barcode": null,
+    "orderDate": "2025-09-30T08:38:05.396Z"
+  }
+]

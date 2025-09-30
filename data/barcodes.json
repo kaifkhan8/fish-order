@@ -1,0 +1,26 @@
+[
+  {
+    "id": "mg6adsobboplsfkk61j",
+    "barcodeValue": "ROHU-001",
+    "fishType": "Rohu",
+    "pricePerKg": 180,
+    "description": "Freshwater fish, rich in protein",
+    "dateAdded": "2025-09-30T08:19:24.395Z"
+  },
+  {
+    "id": "mg6adsobswgfgtnm4r",
+    "barcodeValue": "KATLA-001",
+    "fishType": "Katla",
+    "pricePerKg": 200,
+    "description": "Large freshwater carp",
+    "dateAdded": "2025-09-30T08:19:24.395Z"
+  },
+  {
+    "id": "mg6adsobizvp2fdzlrh",
+    "barcodeValue": "HILSA-001",
+    "fishType": "Hilsa",
+    "pricePerKg": 450,
+    "description": "Premium saltwater fish, known as the king of fish",
+    "dateAdded": "2025-09-30T08:19:24.395Z"
+  }
+]
