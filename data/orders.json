@@ -22,5 +22,17 @@
     "status": "pending",
     "barcode": null,
     "orderDate": "2025-09-30T08:38:05.396Z"
+  },
+  {
+    "id": "mg6di0o4h6zle08godq",
+    "customerName": "fdxz",
+    "customerPhone": "852522322",
+    "fishType": "Prawn",
+    "quantity": 545,
+    "pricePerKg": 21.99,
+    "totalPrice": 11984.55,
+    "status": "pending",
+    "barcode": null,
+    "orderDate": "2025-09-30T09:46:40.228Z"
   }
 ]

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Orders</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <main>
+            <section class="section">
+                <h2>Test Orders Page</h2>
+                <div id="testResult">
+                    <p>Testing...</p>
+                </div>
+                <div id="ordersList">
+                    <p>Orders will appear here</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testResult = document.getElementById('testResult');
+            const ordersList = document.getElementById('ordersList');
+            
+            // Test 1: Check if we can access the API
+            testResult.innerHTML = '<p>Test 1: Checking API access...</p>';
+            
+            fetch('/api/orders')
+                .then(response => {
+                    testResult.innerHTML += `<p>API Response Status: ${response.status}</p>`;
+                    return response.json();
+                })
+                .then(orders => {
+                    testResult.innerHTML += `<p>Successfully fetched ${orders.length} orders</p>`;
+                    
+                    // Display orders
+                    if (orders.length > 0) {
+                        ordersList.innerHTML = `
+                            <h3>Orders:</h3>
+                            <ul>
+                                ${orders.map(order => `<li>Order ${order.id.substring(0, 8)} - ${order.customerName}</li>`).join('')}
+                            </ul>
+                        `;
+                    } else {
+                        ordersList.innerHTML = '<p>No orders found</p>';
+                    }
+                })
+                .catch(error => {
+                    testResult.innerHTML += `<p class="error">Error: ${error.message}</p>`;
+                    console.error('Error details:', error);
+                });
+        });
+    </script>
+</body>
+</html>

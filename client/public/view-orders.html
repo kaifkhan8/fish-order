@@ -25,6 +25,10 @@
         <main>
             <section id="view-orders" class="section">
                 <h2>Current Orders</h2>
+                <div id="debugInfo" style="background-color: #f0f0f0; padding: 10px; margin-bottom: 10px; border-radius: 5px;">
+                    <p><strong>Debug Info:</strong></p>
+                    <p id="debugStatus">Page loaded, waiting for DOM content to be ready...</p>
+                </div>
                 <div id="ordersList">
                     <p>Loading orders...</p>
                 </div>
@@ -38,42 +42,63 @@
         
         // DOM Elements
         const ordersList = document.getElementById('ordersList');
+        const debugStatus = document.getElementById('debugStatus');
+        
+        // Log debug info
+        function logDebug(message) {
+            debugStatus.innerHTML += `<br>${new Date().toLocaleTimeString()}: ${message}`;
+            console.log(message);
+        }
         
         // Initialize the application
+        logDebug('DOM Content Loaded event listener added');
         document.addEventListener('DOMContentLoaded', function() {
+            logDebug('DOM Content Loaded - Starting to load orders');
             loadOrders();
         });
         
         // Load orders from API
         async function loadOrders() {
+            logDebug('loadOrders function called');
             try {
+                logDebug('Making API request to /api/orders');
                 const response = await fetch(`${API_BASE}/orders`);
+                logDebug(`API Response Status: ${response.status}`);
+                
                 if (response.ok) {
                     const orders = await response.json();
+                    logDebug(`Successfully fetched ${orders.length} orders`);
                     displayOrders(orders);
                 } else {
-                    ordersList.innerHTML = '<p class="error">Failed to load orders. Please try again.</p>';
-                    console.error('Failed to load orders');
+                    logDebug(`Failed to load orders. Status: ${response.status}`);
+                    ordersList.innerHTML = `<p class="error">Failed to load orders. Server responded with status ${response.status}</p>`;
                 }
             } catch (error) {
-                ordersList.innerHTML = '<p class="error">Error loading orders. Please check your connection and try again.</p>';
-                console.error('Error loading orders:', error);
+                logDebug(`Error loading orders: ${error.message}`);
+                ordersList.innerHTML = `<p class="error">Error loading orders: ${error.message}</p>`;
             }
         }
         
         // Display orders in the UI
         function displayOrders(orders) {
-            if (!ordersList) return;
+            logDebug(`displayOrders called with ${orders.length} orders`);
+            
+            if (!ordersList) {
+                logDebug('ordersList element not found');
+                return;
+            }
             
             if (orders.length === 0) {
                 ordersList.innerHTML = '<p>No orders found.</p>';
+                logDebug('No orders to display');
                 return;
             }
             
             // Sort orders by date descending (newest first)
             orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+            logDebug('Orders sorted by date');
             
-            ordersList.innerHTML = `
+            let tableHtml = `
                 <table>
                     <thead>
                         <tr>
@@ -88,36 +113,46 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${orders.map(order => `
-                            <tr>
-                                <td>${order.id.substring(0, 8)}</td>
-                                <td>
-                                    <div><strong>${order.customerName}</strong></div>
-                                    <div>${order.customerPhone}</div>
-                                </td>
-                                <td>${order.fishType}</td>
-                                <td>${order.quantity}</td>
-                                <td>${order.totalPrice.toFixed(2)}</td>
-                                <td>
-                                    <select onchange="updateOrderStatus('${order.id}', this.value)" 
-                                            value="${order.status}">
-                                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
-                                        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-                                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
-                                        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                                    </select>
-                                </td>
-                                <td>${new Date(order.orderDate).toLocaleDateString()}</td>
-                                <td><a href="order-details.html?id=${order.id}" class="btn btn-small">View Details</a></td>
-                            </tr>
-                        `).join('')}
+            `;
+            
+            orders.forEach(order => {
+                tableHtml += `
+                    <tr>
+                        <td>${order.id.substring(0, 8)}</td>
+                        <td>
+                            <div><strong>${order.customerName}</strong></div>
+                            <div>${order.customerPhone}</div>
+                        </td>
+                        <td>${order.fishType}</td>
+                        <td>${order.quantity}</td>
+                        <td>${order.totalPrice.toFixed(2)}</td>
+                        <td>
+                            <select onchange="updateOrderStatus('${order.id}', this.value)" 
+                                    value="${order.status}">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                        <td><a href="order-details.html?id=${order.id}" class="btn btn-small">View Details</a></td>
+                    </tr>
+                `;
+            });
+            
+            tableHtml += `
                     </tbody>
                 </table>
             `;
+            
+            ordersList.innerHTML = tableHtml;
+            logDebug('Orders displayed in table');
         }
         
         // Update order status
         async function updateOrderStatus(orderId, status) {
+            logDebug(`updateOrderStatus called for order ${orderId} with status ${status}`);
             try {
                 const response = await fetch(`${API_BASE}/orders/${orderId}`, {
                     method: 'PATCH',
@@ -128,15 +163,16 @@
                 });
                 
                 if (response.ok) {
+                    logDebug('Order status updated successfully, reloading orders');
                     // Reload orders to show updated status
                     loadOrders();
                 } else {
+                    logDebug(`Failed to update order status. Status: ${response.status}`);
                     alert('Failed to update order status');
-                    console.error('Failed to update order status');
                 }
             } catch (error) {
+                logDebug(`Network error while updating order status: ${error.message}`);
                 alert('Network error while updating order status');
-                console.error('Network error:', error);
             }
         }
     </script>
