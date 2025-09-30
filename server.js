@@ -205,7 +205,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/public/order.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Open http://localhost:${PORT} in your browser to access the application`);
-});
+// For Vercel deployment, we need to export the app
+module.exports = app;
+
+// Only start the server if this file is run directly (not imported)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Open http://localhost:${PORT} in your browser to access the application`);
+  });
+}
