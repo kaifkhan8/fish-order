@@ -2,6 +2,26 @@
   "version": 2,
   "builds": [
     {
+      "src": "api/orders/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/orders/[id].js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/feedback/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/feedback/[id].js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "api/barcode/index.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -11,9 +31,39 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server.js",
-      "methods": ["GET", "POST", "PATCH", "DELETE"]
+      "src": "/api/orders/(.*)",
+      "dest": "/api/orders/[id].js",
+      "methods": ["GET", "PATCH", "DELETE"]
+    },
+    {
+      "src": "/api/orders",
+      "dest": "/api/orders/index.js",
+      "methods": ["GET", "POST"]
+    },
+    {
+      "src": "/api/feedback/(.*)",
+      "dest": "/api/feedback/[id].js",
+      "methods": ["DELETE"]
+    },
+    {
+      "src": "/api/feedback",
+      "dest": "/api/feedback/index.js",
+      "methods": ["GET", "POST"]
+    },
+    {
+      "src": "/api/barcode/generate-qrcode",
+      "dest": "/api/barcode/index.js",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/api/barcode/scan",
+      "dest": "/api/barcode/index.js",
+      "methods": ["POST"]
+    },
+    {
+      "src": "/api/barcode",
+      "dest": "/api/barcode/index.js",
+      "methods": ["GET"]
     },
     {
       "src": "/(.*)",
