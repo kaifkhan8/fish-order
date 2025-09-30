@@ -32,10 +32,11 @@
         </main>
     </div>
     
-    <script src="app.js"></script>
     <script>
-        // Override the displayOrders function to make orders clickable
+        // Override the displayOrders function before loading app.js
         function displayOrders(orders) {
+            const ordersList = document.getElementById('ordersList');
+            
             if (!ordersList) return;
             
             if (orders.length === 0) {
@@ -82,6 +83,49 @@
                 </table>
             `;
         }
+        
+        // Function to update order status
+        async function updateOrderStatus(orderId, status) {
+            try {
+                const response = await fetch(`/api/orders/${orderId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+                
+                if (response.ok) {
+                    loadOrders();
+                } else {
+                    console.error('Failed to update order status');
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+            }
+        }
+        
+        // Function to load orders
+        async function loadOrders() {
+            try {
+                const response = await fetch('/api/orders');
+                if (response.ok) {
+                    const orders = await response.json();
+                    displayOrders(orders);
+                } else {
+                    console.error('Failed to load orders');
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+        
+        // Load orders when page is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+        });
     </script>
+    
+    <script src="app.js"></script>
 </body>
 </html>
