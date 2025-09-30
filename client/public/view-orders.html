@@ -33,16 +33,45 @@
     </div>
     
     <script>
-        // Override the displayOrders function before loading app.js
+        // API base URL
+        const API_BASE = '/api';
+        
+        // DOM Elements
+        const ordersList = document.getElementById('ordersList');
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+        });
+        
+        // Load orders from API
+        async function loadOrders() {
+            try {
+                const response = await fetch(`${API_BASE}/orders`);
+                if (response.ok) {
+                    const orders = await response.json();
+                    displayOrders(orders);
+                } else {
+                    ordersList.innerHTML = '<p class="error">Failed to load orders. Please try again.</p>';
+                    console.error('Failed to load orders');
+                }
+            } catch (error) {
+                ordersList.innerHTML = '<p class="error">Error loading orders. Please check your connection and try again.</p>';
+                console.error('Error loading orders:', error);
+            }
+        }
+        
+        // Display orders in the UI
         function displayOrders(orders) {
-            const ordersList = document.getElementById('ordersList');
-            
             if (!ordersList) return;
             
             if (orders.length === 0) {
                 ordersList.innerHTML = '<p>No orders found.</p>';
                 return;
             }
+            
+            // Sort orders by date descending (newest first)
+            orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
             
             ordersList.innerHTML = `
                 <table>
@@ -52,7 +81,7 @@
                             <th>Customer</th>
                             <th>Fish Type</th>
                             <th>Quantity (kg)</th>
-                            <th>Total</th>
+                            <th>Total (₹)</th>
                             <th>Status</th>
                             <th>Date</th>
                             <th>Actions</th>
@@ -62,10 +91,13 @@
                         ${orders.map(order => `
                             <tr>
                                 <td>${order.id.substring(0, 8)}</td>
-                                <td>${order.customerName}<br>${order.customerPhone}</td>
+                                <td>
+                                    <div><strong>${order.customerName}</strong></div>
+                                    <div>${order.customerPhone}</div>
+                                </td>
                                 <td>${order.fishType}</td>
                                 <td>${order.quantity}</td>
-                                <td>₹${order.totalPrice.toFixed(2)}</td>
+                                <td>${order.totalPrice.toFixed(2)}</td>
                                 <td>
                                     <select onchange="updateOrderStatus('${order.id}', this.value)" 
                                             value="${order.status}">
@@ -84,10 +116,10 @@
             `;
         }
         
-        // Function to update order status
+        // Update order status
         async function updateOrderStatus(orderId, status) {
             try {
-                const response = await fetch(`/api/orders/${orderId}`, {
+                const response = await fetch(`${API_BASE}/orders/${orderId}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -96,36 +128,17 @@
                 });
                 
                 if (response.ok) {
+                    // Reload orders to show updated status
                     loadOrders();
                 } else {
+                    alert('Failed to update order status');
                     console.error('Failed to update order status');
                 }
             } catch (error) {
+                alert('Network error while updating order status');
                 console.error('Network error:', error);
             }
         }
-        
-        // Function to load orders
-        async function loadOrders() {
-            try {
-                const response = await fetch('/api/orders');
-                if (response.ok) {
-                    const orders = await response.json();
-                    displayOrders(orders);
-                } else {
-                    console.error('Failed to load orders');
-                }
-            } catch (error) {
-                console.error('Error loading orders:', error);
-            }
-        }
-        
-        // Load orders when page is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            loadOrders();
-        });
     </script>
-    
-    <script src="app.js"></script>
 </body>
 </html>
