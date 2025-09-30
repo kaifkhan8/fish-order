@@ -195,11 +195,6 @@ app.post('/api/barcode/scan', async (req, res) => {
 // Serve static files
 app.use(express.static(path.join(__dirname, 'client/public')));
 
-// Test route
-app.get('/test', (req, res) => {
-  res.sendFile(path.join(__dirname, 'test.html'));
-});
-
 // Catch-all handler: serve the main HTML file for any non-API routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/public/order.html'));
