@@ -33,5 +33,55 @@
     </div>
     
     <script src="app.js"></script>
+    <script>
+        // Override the displayOrders function to make orders clickable
+        function displayOrders(orders) {
+            if (!ordersList) return;
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<p>No orders found.</p>';
+                return;
+            }
+            
+            ordersList.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Fish Type</th>
+                            <th>Quantity (kg)</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(order => `
+                            <tr>
+                                <td>${order.id.substring(0, 8)}</td>
+                                <td>${order.customerName}<br>${order.customerPhone}</td>
+                                <td>${order.fishType}</td>
+                                <td>${order.quantity}</td>
+                                <td>₹${order.totalPrice.toFixed(2)}</td>
+                                <td>
+                                    <select onchange="updateOrderStatus('${order.id}', this.value)" 
+                                            value="${order.status}">
+                                        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                    </select>
+                                </td>
+                                <td>${new Date(order.orderDate).toLocaleDateString()}</td>
+                                <td><a href="order-details.html?id=${order.id}" class="btn btn-small">View Details</a></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rehman Fish Shop - Order Details</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Rehman Fish Shop</h1>
+        <p>Fresh Fish & Seafood Delivered Daily</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="order.html">Place Order</a></li>
+            <li><a href="view-orders.html" class="active">View Orders</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+            <li><a href="barcode.html">Barcode Scanner</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <main>
+            <section id="order-details" class="section">
+                <h2>Order Details</h2>
+                <div id="orderDetailContent">
+                    <p>Loading order details...</p>
+                </div>
+                <div class="button-group">
+                    <button id="backToOrders" class="btn">Back to Orders</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+    <script>
+        // Load order details when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('id');
+            
+            if (orderId) {
+                loadOrderDetails(orderId);
+            } else {
+                document.getElementById('orderDetailContent').innerHTML = '<p>No order ID specified.</p>';
+            }
+            
+            // Back button functionality
+            document.getElementById('backToOrders').addEventListener('click', function() {
+                window.location.href = 'view-orders.html';
+            });
+        });
+        
+        // Load order details from API
+        async function loadOrderDetails(orderId) {
+            try {
+                const response = await fetch(`/api/orders/${orderId}`);
+                if (response.ok) {
+                    const order = await response.json();
+                    displayOrderDetails(order);
+                } else {
+                    document.getElementById('orderDetailContent').innerHTML = '<p>Order not found.</p>';
+                }
+            } catch (error) {
+                document.getElementById('orderDetailContent').innerHTML = `<p>Error loading order details: ${error.message}</p>`;
+            }
+        }
+        
+        // Display order details
+        function displayOrderDetails(order) {
+            const orderDetailContent = document.getElementById('orderDetailContent');
+            orderDetailContent.innerHTML = `
+                <div class="order-detail-card">
+                    <div class="order-header">
+                        <h3>Order #${order.id.substring(0, 8)}</h3>
+                        <span class="order-status status-${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                    </div>
+                    
+                    <div class="order-info">
+                        <div class="info-group">
+                            <h4>Customer Information</h4>
+                            <p><strong>Name:</strong> ${order.customerName}</p>
+                            <p><strong>Phone:</strong> ${order.customerPhone}</p>
+                        </div>
+                        
+                        <div class="info-group">
+                            <h4>Order Details</h4>
+                            <p><strong>Fish Type:</strong> ${order.fishType}</p>
+                            <p><strong>Quantity:</strong> ${order.quantity} kg</p>
+                            <p><strong>Price per kg:</strong> ₹${order.pricePerKg.toFixed(2)}</p>
+                            <p><strong>Total Amount:</strong> ₹${order.totalPrice.toFixed(2)}</p>
+                        </div>
+                        
+                        <div class="info-group">
+                            <h4>Order Information</h4>
+                            <p><strong>Order Date:</strong> ${new Date(order.orderDate).toLocaleDateString()}</p>
+                            <p><strong>Order Time:</strong> ${new Date(order.orderDate).toLocaleTimeString()}</p>
+                        </div>
+                        
+                        ${order.barcode ? `
+                        <div class="info-group">
+                            <h4>Barcode Information</h4>
+                            <p><strong>Barcode:</strong> ${order.barcode}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
