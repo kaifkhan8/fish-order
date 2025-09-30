@@ -1,5 +1,14 @@
 const storage = require('../../fileStorage');
 
+// Initialize storage once
+let isStorageInitialized = false;
+async function initializeStorage() {
+  if (!isStorageInitialized) {
+    await storage.initStorage();
+    isStorageInitialized = true;
+  }
+}
+
 module.exports = async (req, res) => {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,7 +23,7 @@ module.exports = async (req, res) => {
 
   try {
     // Initialize storage
-    await storage.initStorage();
+    await initializeStorage();
 
     if (req.method === 'GET') {
       // Get all orders
